@@ -1,30 +1,59 @@
-var cheerio = require("cheerio");
+var express = require("express");
+var bodyParser = require("body-parser");
 var request = require("request");
+var mongoose = require("mongoose");
+var cheerio = require("cheerio");
+var path = require("path");
+var app = express();
+var logger = require("morgan");
 
-console.log("\n******************************************\n" +
-            "Look at the image of every award winner in \n" +
-            "one of the pages of awwwards.com. Then,\n" +
-            "grab the image's source URL." +
-            "\n******************************************\n");
-// Make request to grab the HTML from awwards's clean website section
-request("http://www.awwwards.com/websites/clean/", function(error, response, html) {
-  // Load the HTML into cheerio
-  var $ = cheerio.load(html);
-  // Make an empty array for saving our scraped info
-  var results = [];
-  // With cheerio, look at each award-winning site, enclosed in "figure" tags with the class name "site"
-  $("figure.rollover").each(function(i, element) {
-    /* Cheerio's find method will "find" the first matching child element in a parent.
-     *    We start at the current element, then "find" its first child a-tag.
-     *    Then, we "find" the lone child img-tag in that a-tag.
-     *    Then, .attr grabs the imgs srcset value.
-     *    The srcset value is used instead of src in this case because of how they're displaying the images
-     *    Visit the website and inspect the DOM if there's any confusion
-    */
-    var imgLink = $(element).find("a").find("img").attr("data-srcset").split(",")[0].split(" ")[0];
-    // Push the image's URL (saved to the imgLink var) into the results array
-    results.push({ link: imgLink });
-  });
-  // After looping through each element found, log the results to the console
-  console.log(results);
+var PORT = process.env.PORT || 3000;
+
+//handlebars
+var exphbs = require("express-handlebars");
+
+app.engine("handlebars", exphbs({
+  defaultLayout: "main"
+}));
+
+app.set("view engine", "handlebars");
+
+
+//
+app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+app.use(express.static("./public"));
+
+// database connection
+mongoose.Promise = Promise;
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
+
+if(process.env.MONGODB_URI) {
+    mongoose.connect(process.env.MONGODB_URI)
+} else {
+    mongoose.connect(MONGODB_URI,{
+      useMongoClient: true
+    });
+}
+
+//mongo connection
+var db = mongoose.connection;
+db.on('error',function(err){
+    console.log('Mongoose Error',err);
+});
+db.once('open', function(){
+    console.log("Mongoose is connected");
+});
+
+
+// Routes
+
+
+
+
+app.listen(PORT, function () {
+    console.log("App listening on PORT " + PORT);
 });
