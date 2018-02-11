@@ -7,6 +7,9 @@ var path = require("path");
 var app = express();
 var logger = require("morgan");
 
+// Require all models
+var db = require("./models");
+
 var PORT = process.env.PORT || 3000;
 
 //handlebars

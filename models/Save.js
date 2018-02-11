@@ -1,14 +1,15 @@
 var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
-// Create article schema
+// Create Save schema
+
 var SaveSchema = new Schema({
-  // title is a required string
+  // title is a required
   title: {
     type: String,
     required: true
   },
-  // link is a required string
+  // link is a required
   link: {
     type: String,
     required: true
@@ -26,8 +27,6 @@ var SaveSchema = new Schema({
   }
 });
 
-// Create the Save model with the SaveSchema
 var Save = mongoose.model("Save", SaveSchema);
 
-// Export the model
 module.exports = Save;
