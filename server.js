@@ -58,7 +58,7 @@ app.get("/", function (req, res) {
   res.sendFile(path.join(__dirname, "views/index.html"));
 });
 
-//require("./routes/scrape")(app);
+require("./routes/scrape.js")(app);
 require("./routes/html.js")(app);
 
 app.get("*", function (req, res) {
