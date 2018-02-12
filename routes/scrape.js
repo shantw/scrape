@@ -46,12 +46,28 @@ module.exports = function (app) {
 
     //all the articles
     app.get("/articles", function (req, res) {
-        Article.find({}, function (error, doc) {
+        Article.find({}, function (error, document) {
             if (error) {
                 console.log(error);
             } else {
-                res.send(doc);
+                res.send(document);
             }
         });
     });
+
+        //all the articles with id
+
+        app.get("/articles/:id", function (req, res) {
+            Article.find({
+                    "_id": req.params.id
+                })
+                .populate("note")
+                .exec(function (error, document) {
+                    if (error) {
+                        console.log(error)
+                    } else {
+                        res.send(document);
+                    }
+                });
+        });
 }
