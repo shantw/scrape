@@ -2,9 +2,8 @@ var cheerio = require("cheerio");
 var request = require("request");
 
 // require the models
-var Note = require("../models/Note.js");
-var Article = require("../models/Article.js");
-var Save = require("../models/Save.js");
+
+var db = require("../models");
 
 module.exports = function (app) {
 
@@ -26,9 +25,9 @@ module.exports = function (app) {
                 // Save these results in an object that we'll push into the results array we defined earlier
                 if (result.title && result.link) {
                     //console.log(result.title);
-                    var entry = new Article(result);
+                    var entry = new db.Article(result);
                     //Save
-                    Article.update(
+                    db.Article.update(
                         {link: result.link},
                         result,
                         { upsert: true },
@@ -46,7 +45,7 @@ module.exports = function (app) {
 
     //all the articles
     app.get("/articles", function (req, res) {
-        Article.find({}, function (error, document) {
+        db.Article.find({}, function (error, document) {
             if (error) {
                 console.log(error);
             } else {
@@ -58,7 +57,7 @@ module.exports = function (app) {
         //all the articles with id
 
         app.get("/articles/:id", function (req, res) {
-            Article.find({
+            db.Article.find({
                     "_id": req.params.id
                 })
                 .populate("note")
@@ -73,7 +72,7 @@ module.exports = function (app) {
 
         // all saved articles
         app.get("/saved/all", function (req, res) {
-            Save.find({})
+            db.Save.find({})
                 .populate("note")
                 .exec(function (error, data) {
                     if (error) {
@@ -94,7 +93,7 @@ module.exports = function (app) {
             result.title = req.body.title;
             result.link = req.body.link;
             
-            var entry = new Save(result);
+            var entry = new db.Save(result);
 
             // save that entry to the db
             entry.save(function (err, doc) {
@@ -113,7 +112,7 @@ module.exports = function (app) {
  app.delete("/delete", function (req, res) {
     var result = {};
     result._id = req.body._id;
-    Save.findOneAndRemove({
+    db.Save.findOneAndRemove({
         '_id': req.body._id
     }, function (err, doc) {
         // Log any errors
@@ -130,7 +129,7 @@ module.exports = function (app) {
 
 app.get("/notes/:id", function (req, res) {
     if(req.params.id) {
-        Note.find({
+        db.Note.find({
             "article_id": req.params.id
         })
         .exec(function (error, doc) {
@@ -147,7 +146,7 @@ app.get("/notes/:id", function (req, res) {
 // Create a new note or replace an existing note
 app.post("/notes", function (req, res) {
     if (req.body) {
-        var newNote = new Note(req.body);
+        var newNote = new db.Note(req.body);
         newNote.save(function (error, doc) {
             if (error) {
                 console.log(error);
@@ -161,7 +160,7 @@ app.post("/notes", function (req, res) {
 });
 // find and update the note
 app.get("/notepopulate", function (req, res) {
-    Note.find({
+    db.Note.find({
         "_id": req.params.id
     }, function (error, doc) {
         if (error) {
@@ -177,7 +176,7 @@ app.get("/notepopulate", function (req, res) {
 app.delete("/deletenote", function (req, res) {
     var result = {};
     result._id = req.body._id;
-    Note.findOneAndRemove({
+    db.Note.findOneAndRemove({
         '_id': req.body._id
     }, function (err, doc) {
         // Log any errors
