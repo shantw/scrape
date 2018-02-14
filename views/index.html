@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="/css/style.css">
 
     <script type="text/javascript" src="/javascript/index.js"></script>
+    <script type="text/javascript" src="/javascript/savedarticles.js"></script>
     
 </head>
 
@@ -29,6 +30,11 @@
                         </ul>
                         <ul class="right hide-on-med-and-down">
                           <button data-target="scrape-article" id = "scrapeBtn" class="btn waves-effect waves-light grey modal-trigger" onclick="displayResults()">Scrape Articles</button>
+                        </ul>
+                        <ul class="side-nav" id="mobile-demo">
+                                <li><a href="#">HOME</a></li>
+                                <li><a href="#" onclick="displaySaved()">Saved Articles</a></li>
+                                <button data-target="scrape-article" class="btn waves-effect waves-light modal-trigger" onclick="displayResults()">Scrape Articles</button>
                         </ul>
                     </div>
                 </nav>

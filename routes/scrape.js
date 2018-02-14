@@ -4,7 +4,7 @@ var request = require("request");
 // require the models
 var Note = require("../models/Note.js");
 var Article = require("../models/Article.js");
-var Save = require("../models/Save");
+var Save = require("../models/Save.js");
 
 module.exports = function (app) {
 
@@ -70,4 +70,43 @@ module.exports = function (app) {
                     }
                 });
         });
+
+        // all saved articles
+        app.get("/saved/all", function (req, res) {
+            Save.find({})
+                .populate("note")
+                .exec(function (error, data) {
+                    if (error) {
+                        console.log(error);
+                        res.json({"code" : "error"});
+                    } else {
+                        res.json(data);
+                    }
+                });
+        });
+    
+        // save the article
+        app.post("/save", function (req, res) {
+            var result = {};
+            result.id = req.body._id;
+            result.summary = req.body.summary;
+            result.byline = req.body.byline;
+            result.title = req.body.title;
+            result.link = req.body.link;
+            
+            var entry = new Save(result);
+
+            // save that entry to the db
+            entry.save(function (err, doc) {
+                if (err) {
+                    console.log(err);
+                    res.json(err);
+                }
+                // Or log the doc
+                else {
+                    res.json(doc);
+                }
+            });
+        });
+
 }
