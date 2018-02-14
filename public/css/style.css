@@ -6,3 +6,11 @@
 body {
     background-image: url("../images/background.png");
 }
+
+.card-action a {
+    color: black !important;
+}
+
+.delete-button {
+    margin-left: 9px;
+}

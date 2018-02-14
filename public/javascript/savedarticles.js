@@ -6,6 +6,7 @@ function displaySaved() {
         $("#total-number").text(data.length);
 
         for (var i = 0; i < data.length; i++) {
+
             var mainDiv = $("<div>");
             mainDiv.addClass("card grey lighten-2");
             mainDiv.attr("id", "main-" + data[i]._id);
@@ -19,11 +20,13 @@ function displaySaved() {
             spanTitle.attr("id", "title-" + data[i]._id);
             spanTitle.text(data[i].title);
 
+
             var p = $("<p>");
             p.text(data[i].summary);
             p.attr("id", "summary-" + data[i]._id);
             cardContentDiv.append(spanTitle);
             cardContentDiv.append(p);
+
             var cardActionDiv = $("<div>");
             cardActionDiv.addClass("card-action");
 
@@ -38,12 +41,12 @@ function displaySaved() {
             button.attr("data-id", data[i]._id);
             button.attr("data-target", "notes");
             button.text("Create Notes");
-
+            
             var deleteArticle = $("<a>");
             deleteArticle.addClass("waves-effect waves-light white btn delete-button");
             deleteArticle.attr("id", data[i]._id);
             deleteArticle.text("Delete");
-            
+
             var byline = $("<p>");
             byline.text(data[i].byline);
             cardActionDiv.append(byline);
